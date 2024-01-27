@@ -1,0 +1,64 @@
+#include<stdio.h>
+#include<math.h>
+#pragma warning(disable:4996)
+int main()
+{
+	int n, m, flag = 1;
+	double x[101], y[101];
+	double z[101][101] = { 0 };
+	double xshuru, yshuchu = 0;
+	int i, j, k = 0, l, s;
+	int height;
+	double t;
+	scanf("%d %d", &n, &m);//输入n，m
+	for (i = 0; k < n; i++)
+	{
+		scanf("%lf %lf", &x[i], &y[i]);
+		for (j = 0; j < i; j++)
+			if (x[i] == x[j])
+			{
+				i -= 1;
+				break;
+			}
+		k += 1;
+	}//输入提供的测试点(并踢除了重复点)//
+	n = i;//n的值变化了
+	for (i = 0; i < n; i++)//计算差商表第一列
+	{
+		z[i][0] = y[i];
+	}
+	for (i = 1; i < n; i++)//计算差商表后面几列
+	{
+		for (j = i; j < n; j++)
+		{
+			z[j][i] = (z[j][i - 1] - z[j - 1][i - 1]) / (x[j] - x[j - i]);
+			if (abs(z[j][i]) <= 0.0009)
+				z[j][i] = 0;
+		}
+	}
+	for (l = n-1; l >=0 ; l--)
+	{
+		if (abs(z[l][l])>=0.0009)
+		{
+			s = l;
+			flag = 0;
+			break;
+		}
+	}
+	printf("%d\n", s);
+	for (i = 0; i < m; i++)//用差商表去算//
+	{
+		scanf("%lf", &xshuru);
+		yshuchu = z[s][s];
+		for (k = s - 1; k >= 0; k--)
+		{
+			t = xshuru - x[k];
+			yshuchu *= t;
+			yshuchu += z[k][k];
+			
+		}//秦九韶算法//
+		printf("%lf\n", yshuchu);
+	}
+
+	return 0;
+}
